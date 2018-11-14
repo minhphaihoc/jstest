@@ -21,7 +21,10 @@
   //    console.log(originalArray);
   // });
 
-  var forEach = function (array, callback) {
+  var forEach = function (array, callback, optionalThisObject) {
+    if (optionalThisObject) {
+      callback = callback.bind(optionalThisObject);
+    }
     for (var i = 0; i < array.length; i++) {
       callback(array[i], i, array);
     }
@@ -51,6 +54,10 @@
         eq(testArray, originalArray);
       });
     },
-
+    'It should accept an optional this object': function () {
+      forEach([1], function () {
+        eq(this.description, 'I am an optional this object');
+      }, {description: 'I am an optional this object'});
+    },
   });
 </script>

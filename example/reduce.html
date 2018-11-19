@@ -23,40 +23,47 @@
   // Return value:
     // Retuns a single value
 
-  // Notes: Object.keys([, , ,]) === 0 => true;
-
-  // Requirements:
-
-  // It should actually reduce.
-  // It should exclude holes.
-  // If array is empty and no initialValue, throw TypeError.
-  // It should pass array as the fourth argument to callback.
-
   var reduce = function (array, callback, initialValue) {
 
     var startingIndex = 0;
     var accumulator = initialValue;
+    var arrayIndexes = Object.keys(array);
 
     // No initialValue
     if (arguments.length < 3) {
+
+      // If array is empty, throw TypeError
+      if (arrayIndexes.length === 0) {
+        throw new TypeError('Reduce of empty array with no initial value');
+      }
+
+      // If array has one element, return it.
+      if (arrayIndexes.length === 1) {
+        var onlyIndex = arrayIndexes[0];
+        var onlyElement = array[onlyIndex];
+
+        return onlyElement;
+      }
+
+      // Skip holes in the beginning of the array.
+      while (startingIndex in array === false && startingIndex < array.length) {
+        startingIndex++;
+      }
+
       accumulator = array[startingIndex];
       startingIndex++;
 
-      // If array has one element, return it.
-      if (Object.keys(array).length === 1) {
-        var singleIndex = Object.keys(array)[0];
-        var singleElement = array[singleIndex];
-
-        return singleElement;
-      }
-
       // Has initialValue
     } else {
-      if (Object.keys(array).length === 0) return initialValue;
+      if (arrayIndexes.length === 0) return initialValue;
     }
     for (var i = startingIndex; i < array.length; i++) {
-      callback(accumulator, array[i], i);
+      if (i in array) {
+        accumulator = callback(accumulator, array[i], i, array);
+      }
     }
+
+    return accumulator;
   };
 
   tests({
@@ -126,16 +133,42 @@
     },
 
     'It should actually reduce.': function () {
-      fail();
+      var sum = reduce([1, 2, 3], function (a, b) {
+        return a + b;
+      }, 0);
+      
+      eq(sum, 6);
     },
-    'It should exclude holes.': function () {
-      fail();
+    'If has initialValue, It should exclude holes.': function () {
+      var sum = reduce([, 1, , 2, 3], function (a, b) {
+        return a + b;
+      }, 0);
+      
+      eq(sum, 6);
+    },
+    'If no initialValue, It should exclude holes too.': function () {
+      var sum = reduce([, 1, , 2, 3], function (a, b) {
+        return a + b;
+      });
+      
+      eq(sum, 6);
     },
     'If array is empty and no initialValue, throw TypeError.': function () {
-      fail();
+      var isTypeError = false;
+
+      try {
+        reduce([], function () {});
+      } catch (e) {
+        isTypeError = (e instanceof TypeError);
+      }
+
+      eq(isTypeError, true);
     },
     'It should pass array as the fourth argument to callback.': function () {
-      fail();
+      var testArray = [1, 2];
+      reduce(testArray, function (accumulator, currentValue, currentIndex, array) {
+        eq(array, testArray);
+      }, 0);
     },
   });
 </script>

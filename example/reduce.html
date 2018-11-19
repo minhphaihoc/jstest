@@ -1,0 +1,43 @@
+<script src="../tinytest.js"></script>
+<script>
+  // Prototype Implementation:
+    // var reduce = function (array, callback, initialValue) {
+    //   var accumulator = initialValue;
+
+    //   for (var i = 0; i < array.length; i++) {
+    //     accumulator = callback(accumulator, array[i], i, array);
+    //   }
+
+    //   return accumulator;
+    // };
+
+  // Function Signature:
+    // reduce(array, callback[, initialValue]);
+
+  // Callback Parameters:
+  // accumulator
+  // currentValue
+  // currentIndex
+  // array
+
+  // Return value:
+    // Retuns a single value
+
+  // Requirements:
+
+  // If initialValue, accumulator should start with initialValue.
+  // If initialValue, currentValue should start with array[0].
+  // If initialValue, callback should start at index 0.
+
+  // If no initialValue, accumulator should start with array[0].
+  // If no initialValue, currentValue should start with array[1].
+  // If no initialValue, callback should start at index 1.
+
+  // If initialValue, and array is empty => return initialValue without calling callback.
+  // If no initialValue, and array has one element => it should return that element without calling callback.
+
+  // It should actually reduce.
+  // It should exclude holes.
+  // If array is empty and no initialValue, throw TypeError.
+  // It should pass array as the fourth argument to callback.
+</script>

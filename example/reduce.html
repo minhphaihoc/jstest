@@ -39,19 +39,11 @@
 
       // If array has one element, return it.
       if (arrayIndexes.length === 1) {
-        var onlyIndex = arrayIndexes[0];
-        var onlyElement = array[onlyIndex];
-
-        return onlyElement;
+        return array[arrayIndexes[0]];
       }
 
-      // Skip holes in the beginning of the array.
-      while (startingIndex in array === false && startingIndex < array.length) {
-        startingIndex++;
-      }
-
-      accumulator = array[startingIndex];
-      startingIndex++;
+      accumulator = array[arrayIndexes[0]];
+      startingIndex = Number(arrayIndexes[0]) + 1;
 
       // Has initialValue
     } else {
@@ -136,21 +128,21 @@
       var sum = reduce([1, 2, 3], function (a, b) {
         return a + b;
       }, 0);
-      
+
       eq(sum, 6);
     },
     'If has initialValue, It should exclude holes.': function () {
       var sum = reduce([, 1, , 2, 3], function (a, b) {
         return a + b;
       }, 0);
-      
+
       eq(sum, 6);
     },
     'If no initialValue, It should exclude holes too.': function () {
       var sum = reduce([, 1, , 2, 3], function (a, b) {
         return a + b;
       });
-      
+
       eq(sum, 6);
     },
     'If array is empty and no initialValue, throw TypeError.': function () {
